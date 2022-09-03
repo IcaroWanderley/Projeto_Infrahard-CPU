@@ -41,7 +41,7 @@ module control(
     parameter functsub = 6'b100_010;
 
     always @(posedge clk) begin
-        if(reset == 1'b1 || state == sreseta) begin
+        if(reset == 1'b1 || estado == sreseta) begin
             regpc_write = 1'b0;
             regMdr = 1'b0;
             regwriteA = 1'b0;
@@ -63,7 +63,7 @@ module control(
             muxDataSrc = 4'b1000;
 
             contador = 5'b00000;
-            estado = sfetch
+            estado = sfetch;
         end else begin      
             case (estado)
                 sfetch: begin
@@ -79,9 +79,9 @@ module control(
                         regMdr = 1'b0;
 
                         muxiord = 2'b00;
-                        regmem_read = 1'b1;
+                        regmem_read = 1'b0;
                         muxAluSrcA = 2'b00;
-                        muxAluSrcA = 2'b01;
+                        muxAluSrcB = 2'b01;
                         Alu_control = 3'b001;
 
                         contador = contador + 5'b00001;
@@ -101,13 +101,13 @@ module control(
                         regpc_write = 1'b0;
 
                         muxAluSrcA = 2'b00;
-                        muxAluSrcB = 2'b11;
+                        muxAluSrcB = 2'b01;
                         Alu_control = 3'b001;
-                        AluOutCtrl = 1'b1;
+                        regaluoutctrl = 1'b1;
 
                         contador = contador + 5'b00001;
                     end else if(contador == 5'b00001) begin
-                        AluOutCtrl = 1'b0;
+                        regaluoutctrl = 1'b0;
 
                         regwriteA = 1'b1;
                         regwriteB = 1'b1;
@@ -314,7 +314,7 @@ module control(
                             estado = soverflow;
                         end else begin
                             muxDataSrc = 4'b0000;
-                            muxRegDst = 2'b01;
+                            muxRegDst = 2'b00;
                             regregwrite = 1'b1;
 
                             contador = 5'b00000;

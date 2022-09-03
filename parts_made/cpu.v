@@ -50,7 +50,7 @@ module cpu(
     wire [31:0] alusrcAout;
     wire [31:0] alusrcBout;
     //Alucontrol
-    wire [31:0] Alucontrolout;
+    wire [31:0] AluOut;
     wire [31:0] Aluoutcontrolout;
     //Epccontrol
     wire [31:0] Epccontrolout;
@@ -61,7 +61,7 @@ module cpu(
     //overflow
     wire overflow;
 
-    Registador PC(
+    Registrador PC(
         clk,
         reset,
         regpc_write,
@@ -69,7 +69,7 @@ module cpu(
         pc_out
     );
 
-    Registador MDR(
+    Registrador MDR(
         clk,
         reset,
         regMdr,
@@ -77,7 +77,7 @@ module cpu(
         mdrout
     );
 
-    Registador A(
+    Registrador A(
         clk,
         reset,
         regwriteA,
@@ -85,7 +85,7 @@ module cpu(
         regAout
     );
 
-    Registador B(
+    Registrador B(
         clk,
         reset,
         regwriteB,
@@ -93,19 +93,19 @@ module cpu(
         regBout
     );
 
-    Registador AluOutCtrl(
+    Registrador AluOutCtrl(
         clk,
         reset,
         regaluoutctrl,
-        Alucontrolout,
-        mdrout
+        AluOut,
+        Aluoutcontrolout
     );
 
-    Registador Epcctrl(
+    Registrador Epcctrl(
         clk,
         reset,
         regepcCtrl,
-        Alucontrolout,
+        AluOut,
         Epccontrolout
     );
 
@@ -135,14 +135,14 @@ module cpu(
         Irout25to21,
         Irout20to16,
         regdstout,
-        darasrcout,
+        datasrcout,
         Data1out,
         Data2out
     );
 
-    sl2 shift_left(
-        SE16to32out,
-        shiftleftout
+    ex16to32 ex16to32_(
+        Irout15to0,
+        SE16to32out
     );
 
     mux_ex_cause excpctrl(
@@ -150,20 +150,19 @@ module cpu(
         ExcpCtrlOut
     );
 
-    muxiord iord(
+    mux_iord iord(
         muxiord,
         pc_out,
         32'd0,
         32'd0,
-        ExcpCtrlOut
+        ExcpCtrlOut,
+        IorDout
     );
 
     mux_regdestino dst(
         muxRegDst,
         Irout20to16,
         Irout15to0 [15:11],
-        5'd29,
-        5'd31,
         regdstout
     );
 
@@ -177,23 +176,20 @@ module cpu(
         SE16to32out,
         32'd0,
         32'd0,
-        32'd227,
         datasrcout
     );
 
-    mux_a A(
+    mux_a A_(
         muxAluSrcA,
         pc_out,
         regAout,
         SE8to32out,
-        32'd0,
         alusrcAout
     );
 
-    mux_b B(
+    mux_b B_(
         muxAluSrcB,
         regBout,
-        32'd4,
         SE16to32out,
         shiftleftout,
         alusrcBout
@@ -201,7 +197,7 @@ module cpu(
 
     mux_pcsrc pcsource(
         muxpc_src,
-        Alucontrolout,
+        AluOut,
         Aluoutcontrolout,
         32'd0,
         SE8to32out,
@@ -210,16 +206,11 @@ module cpu(
     );
 
     ula32 ULA(
-        regAout,
-        regBout,
+        alusrcAout,
+        alusrcBout,
         Alu_control,
-        Alucontrolout,
-        overflow,
-        32'd0,
-        32'd0,
-        32'd0,
-        32'd0,
-        32'd0,
+        AluOut,
+        overflow
     );
 
     control controle(
