@@ -140,6 +140,11 @@ module cpu(
         Data2out
     );
 
+    ex8to32 ex8to32_(
+        mdrout[7:0],
+        SE8to32out
+    );
+
     ex16to32 ex16to32_(
         Irout15to0,
         SE16to32out
