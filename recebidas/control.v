@@ -145,6 +145,7 @@ module control(
                         regepcCtrl = 1'b0;
                         regmem_read = 1'b0;
                         regir_write = 1'b0;
+                        regMdr = 1'b1;
 
                         muxExcpCtrl = 2'b00;
                         muxiord = 2'b11;
@@ -152,6 +153,7 @@ module control(
                         muxAluSrcA = 2'b00;
                         muxAluSrcB = 2'b01;
                         Alu_control = 3'b010;
+                        
 
                         contador = contador + 5'b00001;
                     end else if(contador == 5'b00011) begin
@@ -161,6 +163,7 @@ module control(
                         contador = contador + 5'b00001;
                     end else begin
                         regepcCtrl = 1'b0;
+                        regMdr = 1'b0;
 
                         muxpc_src = 3'b011;
                         regpc_write = 1'b1;
@@ -178,6 +181,7 @@ module control(
                         regepcCtrl = 1'b0;
                         regmem_read = 1'b0;
                         regir_write = 1'b0;
+                        regMdr = 1'b1;
 
                         muxExcpCtrl = 2'b01;
                         muxiord = 2'b11;
@@ -185,6 +189,7 @@ module control(
                         muxAluSrcA = 2'b00;
                         muxAluSrcB = 2'b01;
                         Alu_control = 3'b010;
+                        
 
                         contador = contador + 5'b00001;
                     end else if(contador == 5'b00011) begin
@@ -194,6 +199,7 @@ module control(
                         contador = contador + 5'b00001;
                     end else begin
                         regepcCtrl = 1'b0;
+                        regMdr = 1'b0;
 
                         muxpc_src = 3'b011;
                         regpc_write = 1'b1;
